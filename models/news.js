@@ -17,7 +17,7 @@ class News {
 
 // Create new news
 static async create(newsData) {
-    const news = new News(newsdata);
+    const news = new News(newsData);
     const docRef = await db.collection('news').add({
       ...newsData,
       createdAt: admin.firestore.FieldValue.serverTimestamp()

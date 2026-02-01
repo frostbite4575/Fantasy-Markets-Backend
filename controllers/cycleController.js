@@ -34,22 +34,23 @@ exports.runCycle = async (req, res) => {
     
     console.log('World ready:', world.name);
     
-    await Market.create(marketData);
+  
 
     // Get current market data
     console.log('Fetching market data...');
     const marketData = await marketDataService.getCurrentMarketData();
-    
+      await Market.create(marketData);
     // Translate market data
     console.log('Translating market data...');
     const translation = await claudeService.translateMarketData(world, marketData);
     
-    await News.create(realNews);
+ 
     // Get current news
     console.log('Fetching news...');
    
 
     const realNews = await newsService.getCurrentNews();
+       await News.create(realNews);
   console.log('Real news fetched:', realNews); 
     
     // Translate news

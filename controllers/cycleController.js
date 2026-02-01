@@ -1,9 +1,12 @@
 // controllers/cycleController.js
 const Cycle = require('../models/cycle');
 const World = require('../models/world');
+const Market = require('../models/market');
+const News = require('../models/news');
 const claudeService = require('../services/claudeService');
 const marketDataService = require('../services/marketDataService');
 const newsService = require('../services/newsService');
+
 
 // @desc    Run complete fantasy market cycle
 // @route   POST /api/cycles/run
@@ -31,6 +34,8 @@ exports.runCycle = async (req, res) => {
     
     console.log('World ready:', world.name);
     
+    await Market.create(marketData);
+
     // Get current market data
     console.log('Fetching market data...');
     const marketData = await marketDataService.getCurrentMarketData();
@@ -39,6 +44,7 @@ exports.runCycle = async (req, res) => {
     console.log('Translating market data...');
     const translation = await claudeService.translateMarketData(world, marketData);
     
+    await News.create(realNews);
     // Get current news
     console.log('Fetching news...');
    

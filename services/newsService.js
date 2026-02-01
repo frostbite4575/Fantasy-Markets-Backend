@@ -1,7 +1,7 @@
 //services/newsService.js
 const axios = require('axios');
 
-async function getCurrentNews (query = "business news") {
+async function getCurrentNews (query = "stocks") {
 
 try {
   const response = await axios.get (`https://newsapi.org/v2/everything?q=${query}&sortBy=publishedAt&apiKey=${process.env.NEWS_API_KEY}`);

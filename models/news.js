@@ -2,7 +2,7 @@ const { db } = require('../config/firebase');
 const { admin } = require('../config/firebase');
 
 //spy oil gold bitcoin nvidia
-class Market {
+class News {
     constructor(data) {
         this.id = data.id;
         this.spy = data.spy;

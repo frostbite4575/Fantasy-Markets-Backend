@@ -1,47 +1,49 @@
 const { db } = require('../config/firebase');
 const { admin } = require('../config/firebase');
 
-//spy oil gold bitcoin nvidia
+
 class News {
     constructor(data) {
         this.id = data.id;
-        this.spy = data.spy;
-        this.gold = data.gold;
-        this.bitcoin = data.bitcoin;
-        this.oil = data.oil;
-        this.nvidia = data.nvidia;
+        this.author = data.author;
+        this.title = data.title;
+        this.content = data.content;
+        this.url = data.url;
+        this.urlToImage = data.urlToImage;
+        this.publishedAt = data.publishedAt;
+        this.source = data.source;
     }
 
 
-// Create new market
-static async create(marketData) {
-    const market = new Market(marketData);
-    const docRef = await db.collection('market').add({
-      ...marketData,
+// Create new news
+static async create(newsData) {
+    const news = new News(newsdata);
+    const docRef = await db.collection('news').add({
+      ...newsData,
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     });
     
     return {
       id: docRef.id,
-      ...market
+      ...news
     };
   }
 
 //find them
     static async findAll() {
-    const snapshot = await db.collection('market')
+    const snapshot = await db.collection('news')
       .orderBy('createdAt', 'desc')
       .get();
     
-    const market = [];
+    const news = [];
     snapshot.forEach(doc => {
-      market.push({
+      news.push({
         id: doc.id,
         ...doc.data()
       });
     });
     
-    return market;
+    return news;
   }
 }
-module.exports = Market;
+module.exports = News;

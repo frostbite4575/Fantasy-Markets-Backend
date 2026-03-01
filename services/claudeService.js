@@ -9,6 +9,17 @@ class ClaudeService {
     });
   }
 
+  _parseClaudeJson(response) {
+    let text = response.content[0].text;
+    text = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+    try {
+      return JSON.parse(text);
+    } catch (error) {
+      console.error('Failed to parse Claude response:', text.substring(0, 200));
+      throw new Error('Claude returned invalid JSON');
+    }
+  }
+
   async generateWorld() {
     const prompt = `Generate a unique fantasy world. Randomly choose from these genres:
 - High Fantasy (dragons, elves, magic kingdoms)
@@ -49,14 +60,7 @@ Return this exact structure:
       }]
     });
 
-    let responseText = response.content[0].text;
-    responseText = responseText.replace(/```json\s*/g, '');
-    responseText = responseText.replace(/```\s*/g, '');
-    responseText = responseText.trim();
-
-    console.log('Cleaned response:', responseText.substring(0, 100) + '...');
-
-    return JSON.parse(responseText);
+    return this._parseClaudeJson(response);
   }
 
   async translateMarketData(world, marketData) {
@@ -91,12 +95,7 @@ Return this exact structure:
       }]
     });
 
-    let responseText = response.content[0].text;
-    responseText = responseText.replace(/```json\s*/g, '');
-    responseText = responseText.replace(/```\s*/g, '');
-    responseText = responseText.trim();
-
-    return JSON.parse(responseText);
+    return this._parseClaudeJson(response);
   }
 
   async translateNews(world, realNews) {
@@ -132,12 +131,7 @@ Return this exact structure:
       }]
     });
 
-    let responseText = response.content[0].text;
-    responseText = responseText.replace(/```json\s*/g, '');
-    responseText = responseText.replace(/```\s*/g, '');
-    responseText = responseText.trim();
-
-    return JSON.parse(responseText);
+    return this._parseClaudeJson(response);
   }
 
   async predictPrices(world, fantasyNews, currentPrices, mappings) {
@@ -179,13 +173,8 @@ Return this exact structure:
       }]
     });
 
-    let responseText = response.content[0].text;
-    responseText = responseText.replace(/```json\s*/g, '');
-    responseText = responseText.replace(/```\s*/g, '');
-    responseText = responseText.trim();
-    
-    const predictions = JSON.parse(responseText);
-    
+    const predictions = this._parseClaudeJson(response);
+
     // Calculate predicted prices
     predictions.forEach(pred => {
       const change = pred.current_price * (pred.predicted_change_percent / 100);

@@ -50,8 +50,11 @@ class MarketDataService {
       } catch (error) {
         console.error(error);
         throw new Error('Failed to fetch market data');
-      }}
-      async getCurrentMarketData() {
+      }
+  }
+
+  async getCurrentMarketData() {
+    try {
       const [spy, gold, bitcoin, oil, nvidia] = await Promise.all([
         this.getSPYData(),
         this.getGoldData(),
@@ -59,28 +62,19 @@ class MarketDataService {
         this.getCrudeOilData(),
         this.getNvidiaData()
       ]);
-    
-    return {
+
+      return {
         'S&P 500': parseFloat(spy['Global Quote']?.['05. price']),
         'Gold': parseFloat(gold['Global Quote']?.['05. price']),
         'Bitcoin': parseFloat(bitcoin['Global Quote']?.['05. price']),
         'Crude Oil': parseFloat(oil['Global Quote']?.['05. price']),
         'NVIDIA': parseFloat(nvidia['Global Quote']?.['05. price']),
-      }
-    }catch (error) {
+      };
+    } catch (error) {
       console.error(error);
       throw new Error('Failed to fetch current market data');
     }
+  }
 }
-    
-
-     //  'S&P 500'
-     // 'Gold'
-     // 'Bitcoin'
-    //  'Crude Oil'
-    //  'NVIDIA'
-
- 
-
 
 module.exports = new MarketDataService();
